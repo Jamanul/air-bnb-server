@@ -32,10 +32,14 @@ async function run() {
     const database = client.db("air-bnb");
     const roomsCollection = database.collection("allData");
     app.get('/allData',async(req,res)=>{
-        const {category,allowsPet,wifi,airConditioning,kitchen} = req.query 
+        const {category,allowsPet,wifi,airConditioning,kitchen,instantBooking,selfChecking,guestFavourite,propertyType,bedroomsCount,beds,bathCount} = req.query 
         let query = { $and: [] };
         console.log(req.query)
+        if (propertyType) query.$and.push({ propertyType });
           if (category) query.$and.push({ category });
+          if (bedroomsCount) query.$and.push({ bedroomsCount: { $gte: parseInt(bedroomsCount) } });
+          if (beds) query.$and.push({ beds: { $gte: parseInt(beds) } });
+          if (bathCount) query.$and.push({ bathCount: { $gte: parseInt(bathCount) } });
           if (allowsPet !== undefined) {
             const allowsPetBool = allowsPet === 'true';  
             query.$and.push({ allowsPet: allowsPetBool });
@@ -51,6 +55,18 @@ async function run() {
         if (kitchen !== undefined) {
             const kitchenBool = kitchen === 'true';  // Convert string to boolean
             query.$and.push({ kitchen: kitchenBool });
+        }
+        if (instantBooking !== undefined) {
+            const instantBookingBool = instantBooking === 'true';  // Convert string to boolean
+            query.$and.push({ instantBooking: instantBookingBool });
+        }
+        if (selfChecking !== undefined) {
+            const selfCheckingBool = selfChecking === 'true';  // Convert string to boolean
+            query.$and.push({ selfChecking: selfCheckingBool });
+        }
+        if (guestFavourite !== undefined) {
+            const guestFavouriteBool = guestFavourite === 'true';  // Convert string to boolean
+            query.$and.push({ guestFavourite: guestFavouriteBool });
         }
           if (query.$and.length === 0) {
             query = {}; 
