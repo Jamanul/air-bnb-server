@@ -31,15 +31,50 @@ async function run() {
 
     const database = client.db("air-bnb");
     const roomsCollection = database.collection("allData");
+    app.get('/search',async(req,res)=>{
+        const {category,guestCount,allowsPet,wifi,airConditioning,countryLocation,kitchen,instantBooking,selfChecking,guestFavourite,propertyType,bedroomsCount,beds,bathCount,minValue,maxValue,checkInDate,checkOutDate} = req.query 
+        let query = { $and: [] };
+        console.log(req.query)
+        if (countryLocation) query.$and.push({ countryLocation: { $regex: countryLocation, $options: 'i' } });
+        if (checkInDate || checkOutDate) {
+            query.$and.push({
+                checkInDate: { $lte: new Date(checkInDate) } 
+            });
+            query.$and.push({
+                checkOutDate: { $gte: new Date(checkOutDate) } 
+            });
+        }
+          if (guestCount) query.$and.push({ guestCount: { $gte: parseInt(guestCount) } });
+          console.log("querying from search",query)
+        const result= await roomsCollection.find(query).toArray()
+        res.send(result)
+    })
     app.get('/allData',async(req,res)=>{
-        const {category,allowsPet,wifi,airConditioning,kitchen,instantBooking,selfChecking,guestFavourite,propertyType,bedroomsCount,beds,bathCount} = req.query 
+        const {category,guestCount,allowsPet,wifi,airConditioning,countryLocation,kitchen,instantBooking,selfChecking,guestFavourite,propertyType,bedroomsCount,beds,bathCount,minValue,maxValue,checkInDate,checkOutDate} = req.query 
         let query = { $and: [] };
         console.log(req.query)
         if (propertyType) query.$and.push({ propertyType });
           if (category) query.$and.push({ category });
+            //search  
+            if (countryLocation) query.$and.push({ countryLocation: { $regex: countryLocation, $options: 'i' } });
+            if (checkInDate || checkOutDate) {
+                query.$and.push({
+                    checkInDate: { $lte: new Date(checkInDate) } 
+                });
+                query.$and.push({
+                    checkOutDate: { $gte: new Date(checkOutDate) } 
+                });
+            }
+              if (guestCount) query.$and.push({ guestCount: { $gte: parseInt(guestCount) } });
+            //filter by price range
+            if (minValue || maxValue) {
+                query.$and.push({ price: { $gte: parseInt(minValue) || 0, $lte: parseInt(maxValue) || 1000000 } });
+              }
+            //filter by bed,bed room
           if (bedroomsCount) query.$and.push({ bedroomsCount: { $gte: parseInt(bedroomsCount) } });
           if (beds) query.$and.push({ beds: { $gte: parseInt(beds) } });
           if (bathCount) query.$and.push({ bathCount: { $gte: parseInt(bathCount) } });
+          //filter by all boolean values
           if (allowsPet !== undefined) {
             const allowsPetBool = allowsPet === 'true';  
             query.$and.push({ allowsPet: allowsPetBool });
@@ -49,23 +84,23 @@ async function run() {
             query.$and.push({ wifi: wifiBool });
         }
         if (airConditioning !== undefined) {
-            const airConditioningBool = airConditioning === 'true';  // Convert string to boolean
+            const airConditioningBool = airConditioning === 'true';  
             query.$and.push({ airConditioning: airConditioningBool });
         }
         if (kitchen !== undefined) {
-            const kitchenBool = kitchen === 'true';  // Convert string to boolean
+            const kitchenBool = kitchen === 'true';  
             query.$and.push({ kitchen: kitchenBool });
         }
         if (instantBooking !== undefined) {
-            const instantBookingBool = instantBooking === 'true';  // Convert string to boolean
+            const instantBookingBool = instantBooking === 'true';  
             query.$and.push({ instantBooking: instantBookingBool });
         }
         if (selfChecking !== undefined) {
-            const selfCheckingBool = selfChecking === 'true';  // Convert string to boolean
+            const selfCheckingBool = selfChecking === 'true';  
             query.$and.push({ selfChecking: selfCheckingBool });
         }
         if (guestFavourite !== undefined) {
-            const guestFavouriteBool = guestFavourite === 'true';  // Convert string to boolean
+            const guestFavouriteBool = guestFavourite === 'true';  
             query.$and.push({ guestFavourite: guestFavouriteBool });
         }
           if (query.$and.length === 0) {
