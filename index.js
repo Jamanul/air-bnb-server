@@ -28,6 +28,38 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
+
+    const database = client.db("air-bnb");
+    const roomsCollection = database.collection("allData");
+    app.get('/allData',async(req,res)=>{
+        const {category,allowsPet,wifi,airConditioning,kitchen} = req.query 
+        let query = { $and: [] };
+        console.log(req.query)
+          if (category) query.$and.push({ category });
+          if (allowsPet !== undefined) {
+            const allowsPetBool = allowsPet === 'true';  
+            query.$and.push({ allowsPet: allowsPetBool });
+        }
+        if (wifi !== undefined) {
+            const wifiBool = wifi === 'true';  
+            query.$and.push({ wifi: wifiBool });
+        }
+        if (airConditioning !== undefined) {
+            const airConditioningBool = airConditioning === 'true';  // Convert string to boolean
+            query.$and.push({ airConditioning: airConditioningBool });
+        }
+        if (kitchen !== undefined) {
+            const kitchenBool = kitchen === 'true';  // Convert string to boolean
+            query.$and.push({ kitchen: kitchenBool });
+        }
+          if (query.$and.length === 0) {
+            query = {}; 
+          }
+          console.log("querying",query)
+        const result= await roomsCollection.find(query).toArray()
+        res.send(result)
+    })
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
