@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 app.use(
   cors({
-    origin: 'https://air-bnb-client-seven.vercel.app',  
+    origin: ['https://air-bnb-client-seven.vercel.app/','https://air-bnb-client-seven.vercel.app'],  
   methods: ['GET', 'POST'],
   })
 );
