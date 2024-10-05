@@ -68,7 +68,7 @@ async function run() {
         let query = { $and: [] };
         console.log(req.query)
         if (propertyType) query.$and.push({ propertyType });
-          if (category) query.$and.push({ category });
+          if (category) query.push({ category });
             //search  
             if (countryLocation) query.$and.push({ countryLocation: { $regex: countryLocation, $options: 'i' } });
             if (checkInDate || checkOutDate) {
