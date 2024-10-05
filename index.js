@@ -5,11 +5,15 @@ const cors = require("cors");
 require("dotenv").config();
 
 // CORS configuration
-app.use(
-  cors({
-    origin: ['https://air-bnb-client-seven.vercel.app','https://air-bnb-client-seven.vercel.app/','air-bnb-client-seven.vercel.app','air-bnb-client-seven.vercel.app/',"https://air-bnb-client-lqzp4stpe-jamanul-sakibs-projects.vercel.app/"],
-  })
-);
+app.use(cors({
+    origin: [
+      'https://air-bnb-client-seven.vercel.app',
+      'https://air-bnb-client-lqzp4stpe-jamanul-sakibs-projects.vercel.app'
+    ],
+  }));
+  app.use(cors({
+    origin: /https:\/\/.*\.vercel\.app$/,
+  }));
 
 app.use(express.json());
 
