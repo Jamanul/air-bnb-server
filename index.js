@@ -7,11 +7,12 @@ require("dotenv").config();
 // CORS configuration
 
 app.use(cors({
-    origin :[
-      'http://localhost:5173',
-      "https://air-bnb-client-seven.vercel.app"
-    ]
+    origin: 'https://air-bnb-client-seven.vercel.app', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, 
   }));
+  
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://air-bnb-client-seven.vercel.app');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
