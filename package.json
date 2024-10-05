@@ -1,6 +1,6 @@
 {
   "name": "air-bnb-server",
-  "proxy":"http://localhost:8080/",
+  "proxy": "http://localhost:8080/",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
