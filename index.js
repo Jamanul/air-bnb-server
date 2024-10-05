@@ -1,24 +1,18 @@
 const express = require("express");
 const app = express();
-const port = 5000 || process.env.PORT;
+const port = process.env.PORT || 5000;
 const cors = require("cors");
 require("dotenv").config();
+
+// CORS configuration
 app.use(
   cors({
-    origin: ['https://air-bnb-client-seven.vercel.app/','https://air-bnb-client-seven.vercel.app'],  
-  methods: ['GET', 'POST'],
+    origin: ['https://air-bnb-client-seven.vercel.app'],
+    methods: ['GET', 'POST'],
   })
 );
+
 app.use(express.json());
-app.use((req, res, next) => {
-    res.header(
-      "Access-Control-Allow-Origin",
-      "React app URL"
-    );
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-    next();
-  });
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.dibths0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
