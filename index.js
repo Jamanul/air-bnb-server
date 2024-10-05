@@ -5,19 +5,21 @@ const cors = require("cors");
 require("dotenv").config();
 
 // CORS configuration
+
+app.use(cors({
+    origin :[
+      'http://localhost:5173',
+      "https://air-bnb-client-seven.vercel.app"
+    ]
+  }));
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'https://air-bnb-client-seven.vercel.app');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.header('Access-Control-Allow-Credentials', true);
   
-    // Handle preflight OPTIONS requests
-    if (req.method === 'OPTIONS') {
-      return res.sendStatus(204); // Respond with a "No Content" status
-    }
-  
     console.log('Request received:', req.method, req.url);
-    
+  
     next();
   });
 
